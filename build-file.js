@@ -32,7 +32,11 @@ function buildSeajsFile( srcPath, id, code ){
     }
     // console.log( id );
     var rawDep =  collectDep( code );
-    G.ProductCode +=  consProductCode( code, id, rawDep );
+    if(srcPath.indexOf('.html') > -1) {
+        // DO NOT APPEND HTML INTO COMPILER
+    } else {
+        G.ProductCode +=  consProductCode( code, id, rawDep );
+    }
 
     G.depMap[ id ] = [];
 
@@ -67,7 +71,11 @@ function buildSeajsFile( srcPath, id, code ){
                 // 递归处理: 读code 取依赖, 检测, 构建模块
                 // console.log( 'gonna read file ' + depItem + ',   its id is ' + subID );
                 // TODO 放开注释...
-                buildSeajsFile( depItem+'.js', subID  );
+                if(depItem.indexOf('.html') > -1) {
+                    buildSeajsFile( depItem, subID  );
+                } else {
+                    buildSeajsFile( depItem+'.js', subID  );
+                }
             }
         }
     } );
